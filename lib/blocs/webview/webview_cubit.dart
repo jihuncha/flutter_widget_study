@@ -1,58 +1,22 @@
 
 
-import 'package:equatable/equatable.dart';
+import 'webview_state.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
 import '../../utils/log.dart';
 
 
 class WebviewCubit extends Cubit<WebViewState> {
-  WebviewCubit() : super(WebviewInitial());
-
-  void progressChanged(InAppWebViewController controller, int progress) {
-    Log.e("WebviewCubit/progressChanged");
-    emit(WebviewInProgress());
-  }
+  WebviewCubit() : super(const WebViewCurrentState(currentState: WebViewStateType.LOADING));
 
   void onLoadStop() {
-    Log.e("WebviewCubit/onLoadStop");
-    emit(WebviewInStable());
+    Log.d("WebviewCubit/onLoadStop");
+    emit(const WebViewCurrentState(currentState: WebViewStateType.STABLE));
   }
 
-  void onLoadStart() {
-    Log.e("WebviewCubit/onLoadStart");
-    emit(WebviewOnLoadStart());
+  void onLoadFail(int errorCode) {
+    Log.d("WebviewCubit/onError - $errorCode");
+    emit(WebViewError(currentState: WebViewStateType.ERROR, errorCode: errorCode));
   }
-
-
-}
-
-@immutable
-abstract class WebViewState extends Equatable {}
-
-class WebviewInitial extends WebViewState {
-  @override
-  List<Object> get props => [];
-}
-
-class WebviewInProgress extends WebViewState {
-  @override
-  List<Object> get props => [];
-}
-
-class WebviewOnLoadStart extends WebViewState {
-  @override
-  List<Object> get props => [];
-}
-
-class WebviewInStable extends WebViewState {
-  @override
-  List<Object> get props => [];
-}
-
-class WebviewException extends WebViewState {
-  @override
-  List<Object> get props => [];
 }

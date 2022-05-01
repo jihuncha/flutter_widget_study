@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -45,7 +44,7 @@ class MainPage extends StatelessWidget {
       onPressed: (){
         Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CommonWebViewTemp("www.naver.com")));
+            MaterialPageRoute(builder: (context) => CommonWebViewTemp("abfsdaddss")));
       },
             ),
           ],

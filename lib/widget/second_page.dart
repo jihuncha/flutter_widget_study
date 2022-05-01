@@ -9,8 +9,10 @@ import 'package:flutter/services.dart' show DeviceOrientation, MethodChannel, Sy
 
 
 import '../blocs/webview/webview_cubit.dart';
+import '../blocs/webview/webview_state.dart';
 import '../utils/log.dart';
 import '../utils/webview_utils.dart';
+
 
 class CommonWebViewTemp extends StatelessWidget {
   const CommonWebViewTemp(this.initialUrl);
@@ -112,10 +114,12 @@ class CommonWebViewTemp extends StatelessWidget {
       },
       onLoadError: (controller, url, code, message) {
         Log.e('onLoadError: $code, $message');
-        /** instead of printing the console message i want to render a static page or display static message **/
-        // isErrorOccured = true;
-        // isLoading = false;
-        controller.loadFile(assetFilePath: "assets/test_inappwebview.html");
+        // /** instead of printing the console message i want to render a static page or display static message **/
+        // // isErrorOccured = true;
+        // // isLoading = false;
+        // controller.loadFile(assetFilePath: "assets/test_inappwebview.html");
+
+        context.read<WebviewCubit>().onLoadFail(code);
       },
       onLoadHttpError: (controller, url, code, message) async {
         Log.e('onLoadHttpError: $code, $message');
@@ -128,7 +132,7 @@ class CommonWebViewTemp extends StatelessWidget {
         Log.e("onProgressChanged - $progress");
         // if (progress == 100) {
         // context.read<WebviewCubit>().onLoadStop();
-        context.read<WebviewCubit>().progressChanged(controller, progress);
+        // context.read<WebviewCubit>().progressChanged(controller, progress);
         // }
       },
       // onProgressChanged: (controller, progress) => AppBloc.webviewProgressCubit.progressChanged(progress),
@@ -142,7 +146,7 @@ class CommonWebViewTemp extends StatelessWidget {
       onLoadStart: (controller, url) {
         Log.i("onLoadStart");
         // context.read<WebviewCubit>().progressChanged(true);
-        context.read<WebviewCubit>().onLoadStart();
+        // context.read<WebviewCubit>().onLoadStart();
       },
     );
 
@@ -222,16 +226,21 @@ class CommonWebViewTemp extends StatelessWidget {
           webviewInit(context),
           BlocBuilder<WebviewCubit, WebViewState>(
             builder: (context, state) {
-              if (state is WebviewInitial) {
-                Log.e("WebviewInitial create!!");
+              if (state is WebViewError) {
+                Log.e("state ERROR!! - ${state.toString()}");
               }
-              if (state is WebviewInProgress) {
-                Log.e("WebviewInProgress - ${state.toString()}");
-                return CircularProgressIndicator(
-                  backgroundColor: Colors.deepPurple,
-                  color: Colors.black,
-                );
-              }
+
+
+              // if (state is WebviewCurrentState) {
+              //   Log.e("WebviewInitial create!!");
+              // }
+              // if (state is WebviewInProgress) {
+              //   Log.e("WebviewInProgress - ${state.toString()}");
+              //   return CircularProgressIndicator(
+              //     backgroundColor: Colors.deepPurple,
+              //     color: Colors.black,
+              //   );
+              // }
               return Container(height: 0, width: 0);
             },
           ),
