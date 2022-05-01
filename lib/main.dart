@@ -44,7 +44,7 @@ class MainPage extends StatelessWidget {
       onPressed: (){
         Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CommonWebViewTemp("abfsdaddss")));
+            MaterialPageRoute(builder: (context) => CommonWebViewTemp("www.naver.com")));
       },
             ),
           ],

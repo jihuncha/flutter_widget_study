@@ -111,6 +111,7 @@ class CommonWebViewTemp extends StatelessWidget {
       initialOptions: options,
       onWebViewCreated: (controller) {
         WebViewUtil.addJSHandler(controller, context);
+        // context.read<WebviewCubit>().onLoad
       },
       onLoadError: (controller, url, code, message) {
         Log.e('onLoadError: $code, $message');
@@ -119,14 +120,15 @@ class CommonWebViewTemp extends StatelessWidget {
         // // isLoading = false;
         // controller.loadFile(assetFilePath: "assets/test_inappwebview.html");
 
-        context.read<WebviewCubit>().onLoadFail(code);
+        context.read<WebViewCubit>().onLoadFail(code);
       },
       onLoadHttpError: (controller, url, code, message) async {
         Log.e('onLoadHttpError: $code, $message');
         /** instead of printing the console message i want to render a static page or display static message **/
         // isErrorOccured = true;
         // isLoading = false;
-        controller.loadFile(assetFilePath: "assets/test_inappwebview.html");
+        // controller.loadFile(assetFilePath: "assets/test_inappwebview.html");
+        context.read<WebViewCubit>().onLoadFail(code);
       },
       onProgressChanged: (controller, progress) {
         Log.e("onProgressChanged - $progress");
@@ -134,6 +136,7 @@ class CommonWebViewTemp extends StatelessWidget {
         // context.read<WebviewCubit>().onLoadStop();
         // context.read<WebviewCubit>().progressChanged(controller, progress);
         // }
+
       },
       // onProgressChanged: (controller, progress) => AppBloc.webviewProgressCubit.progressChanged(progress),
       onLoadStop: (controller, url) {
@@ -141,7 +144,7 @@ class CommonWebViewTemp extends StatelessWidget {
         // context.read<WebviewCubit>().progressChanged(false);
         // context.read<WebviewCubit>().onLoadStop();
 
-        context.read<WebviewCubit>().onLoadStop();
+        context.read<WebViewCubit>().onLoadStop();
       },
       onLoadStart: (controller, url) {
         Log.i("onLoadStart");
@@ -216,36 +219,94 @@ class CommonWebViewTemp extends StatelessWidget {
     // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     // Set Preferred Orientations
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    // var myInAppWebview = webviewInit(context);
+    // var myInAppWebview;
 
     //되는것
     return BlocProvider(
-      create: (context) => WebviewCubit(),
-      child: Stack(
-        children: [
-          webviewInit(context),
-          BlocBuilder<WebviewCubit, WebViewState>(
-            builder: (context, state) {
-              if (state is WebViewError) {
-                Log.e("state ERROR!! - ${state.toString()}");
-              }
+      create: (context) => WebViewCubit(),
+      child: BlocBuilder<WebViewCubit, WebViewState> (
+        builder: (context, state) {
+          var myInAppWebview = webviewInit(context);
 
 
-              // if (state is WebviewCurrentState) {
-              //   Log.e("WebviewInitial create!!");
-              // }
-              // if (state is WebviewInProgress) {
-              //   Log.e("WebviewInProgress - ${state.toString()}");
-              //   return CircularProgressIndicator(
-              //     backgroundColor: Colors.deepPurple,
-              //     color: Colors.black,
-              //   );
-              // }
-              return Container(height: 0, width: 0);
-            },
-          ),
-        ],
-      ),
+          return Stack(
+            alignment: Alignment.center,
+            fit: StackFit.expand,
+            children: [
+              myInAppWebview,
+              Center(
+                child: BlocBuilder<WebViewCubit, WebViewState>(
+                    builder: (context, state) {
+                    Log.d("build - ${state.toString()}");
+                    if (state is WebViewError) {
+                      Log.e("state ERROR!! - ${state.toString()}");
+                    } else if (state is WebViewCurrentState) {
+                      Log.d("test !! ${state.currentState}");
+                      if (state == WebViewStateType.LOADING) {
+                        return CircularProgressIndicator(
+                          backgroundColor: Colors.deepPurple,
+                          color: Colors.black,
+                        );
+                      } else if (state == WebViewStateType.STABLE) {
+                        return myInAppWebview;
+                      }
+                    }
+                    return CircularProgressIndicator(
+                      backgroundColor: Colors.deepPurple,
+                      color: Colors.black,
+                    );
+                  }),
+              )
+            ],
+          );
+          // if (state is WebViewError) {
+          //     Log.e("state ERROR!! - ${state.toString()}");
+          //   } else if (state is WebViewCurrentState) {
+          //     if (state == WebViewStateType.LOADING) {
+          //       return CircularProgressIndicator(
+          //         backgroundColor: Colors.deepPurple,
+          //         color: Colors.black,
+          //       );
+          //     } else if (state == WebViewStateType.STABLE) {
+          //       return myInAppWebview;
+          //     }
+          //   }
+          //   return CircularProgressIndicator(
+          //     backgroundColor: Colors.deepPurple,
+          //     color: Colors.black,
+          //   );
+          },
+      )
+
+
+
+      // child: Stack(
+      //   children: [
+      //     webviewInit(context),
+      //     BlocBuilder<WebViewCubit, WebViewState>(
+      //       builder: (context, state) {
+      //         if (state is WebViewError) {
+      //           Log.e("state ERROR!! - ${state.toString()}");
+      //         } else if (state is WebViewCurrentState) {
+      //           if (state == WebViewStateType.LOADING) {
+      //             return CircularProgressIndicator(
+      //               backgroundColor: Colors.deepPurple,
+      //               color: Colors.black,
+      //             );
+      //           } else if (state == WebViewStateType.STABLE) {
+      //             return Container(height: 0, width: 0);
+      //           }
+      //         }
+      //         return CircularProgressIndicator(
+      //           backgroundColor: Colors.deepPurple,
+      //           color: Colors.black,
+      //         );
+      //       },
+      //     ),
+      //   ],
+      // ),
+
+
     );
   }
 

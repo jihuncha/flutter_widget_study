@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 //웹뷰 상태 타입
+//TODO 팝업상태는 inappwebview에서 관리가 필요할까?
 enum WebViewStateType{
   //로딩, 잘나오는상태, 에러상태, 팝업떠있는상태
   LOADING, STABLE, ERROR, POPUP
@@ -35,6 +36,16 @@ class WebViewError extends WebViewState {
 
   @override
   List<Object> get props => [currentState, errorCode];
+}
+
+class WebViewShowPopup extends WebViewState {
+  const WebViewShowPopup({required WebViewStateType currentState, required this.popupUrl})
+      : super(currentState: currentState);
+
+  final String popupUrl;
+
+  @override
+  List<Object> get props => [currentState, popupUrl];
 }
 
 //웹뷰 로딩중일떄 (?) - Loading Progress bar 제공
