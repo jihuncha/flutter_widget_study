@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'widget/first_page.dart';
+import 'widget/second_page.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -15,43 +18,37 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: MainPage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("title!!"),
+        title: Text("토모다치"),
       ),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            color: Colors.red,
-            width: 100,
-            height: 100,
-            padding: const EdgeInsets.all(8.0),
-            margin: const EdgeInsets.all(8.0),
-          ),
-          Container(
-            color: Colors.blue,
-            width: 80,
-            height: 80,
-            padding: const EdgeInsets.all(8.0),
-            margin: const EdgeInsets.all(8.0),
-          ),
-          Container(
-            color: Colors.green,
-            width: 60,
-            height: 60,
-            padding: const EdgeInsets.all(8.0),
-            margin: const EdgeInsets.all(8.0),
-          )
-        ],
-      )
-    );
+      body: Column(
+          children: <Widget>[
+          ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FirstPage()));
+          },
+      child: Text("FirstPage로!!"),
+    ),
+      ElevatedButton(
+      child: Text("second!!"),
+      onPressed: (){
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CommonWebViewTemp("www.naver.com")));
+      },
+            ),
+          ],
+        ));
   }
 }
