@@ -136,7 +136,6 @@ class CommonWebViewTemp extends StatelessWidget {
         // context.read<WebviewCubit>().onLoadStop();
         // context.read<WebviewCubit>().progressChanged(controller, progress);
         // }
-
       },
       // onProgressChanged: (controller, progress) => AppBloc.webviewProgressCubit.progressChanged(progress),
       onLoadStop: (controller, url) {
@@ -227,8 +226,6 @@ class CommonWebViewTemp extends StatelessWidget {
       child: BlocBuilder<WebViewCubit, WebViewState> (
         builder: (context, state) {
           var myInAppWebview = webviewInit(context);
-
-
           return Stack(
             alignment: Alignment.center,
             fit: StackFit.expand,
